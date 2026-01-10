@@ -72,3 +72,17 @@ document.getElementById("send-money-form").addEventListener("submit", function(e
   alert(`Successfully sent $${amount} to ${recipient} (${bank})`);
   this.reset(); // clear form
 });
+
+// Toggle Transfer Form
+const toggleBtn = document.getElementById("toggle-transfer-btn");
+const sendForm = document.getElementById("send-money-form");
+
+toggleBtn.addEventListener("click", () => {
+  if (sendForm.style.display === "none") {
+    sendForm.style.display = "block";
+    toggleBtn.textContent = "Hide Transfer Form";
+  } else {
+    sendForm.style.display = "none";
+    toggleBtn.textContent = "Show Transfer Form";
+  }
+});

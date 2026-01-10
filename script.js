@@ -1,19 +1,8 @@
-// Lightweight client-side handlers
 document.addEventListener("DOMContentLoaded", () => {
-  // Login
-  const loginForm = document.getElementById("login-form");
-  if (loginForm) loginForm.addEventListener("submit", handleLogin);
-
-  // Logout
-  const logoutBtn = document.getElementById("logout-btn");
-  if (logoutBtn) logoutBtn.addEventListener("click", handleLogout);
-
-  // Send Money / Transfer Form
-  const sendForm = document.getElementById("send-money-form");
-  if (sendForm) sendForm.addEventListener("submit", handleSendMoney);
-
-  // Toggle Transfer Form
+  // ----- Toggle Transfer Form -----
   const toggleBtn = document.getElementById("toggle-transfer-btn");
+  const sendForm = document.getElementById("send-money-form");
+
   if (toggleBtn && sendForm) {
     toggleBtn.addEventListener("click", () => {
       if (sendForm.style.display === "none") {
@@ -21,75 +10,10 @@ document.addEventListener("DOMContentLoaded", () => {
         toggleBtn.textContent = "Hide Transfer Form";
       } else {
         sendForm.style.display = "none";
-        toggleBtn.textContent = "Show Transfer Form";
+        toggleBtn.textContent = "Transfer Funds";
       }
     });
   }
-});
-
-// ===== Login handler =====
-function handleLogin(event) {
-  event.preventDefault();
-
-  const username = (document.getElementById("username") || {}).value?.trim() || "";
-  const password = (document.getElementById("password") || {}).value || "";
-  const messageEl = document.getElementById("login-message");
-
-  if (!username || !password) {
-    alert("Please enter both username and password.");
-    return;
-  }
-
-  messageEl.style.color = "blue";
-  messageEl.textContent = "Checking credentials...";
-
-  setTimeout(() => {
-    if (username === "John Williams" && password === "Password123") {
-      messageEl.style.color = "green";
-      messageEl.textContent = "Login successful! Redirecting...";
-
-      setTimeout(() => {
-        window.location.href = "dashboard.html";
-      }, 1000);
-    } else {
-      messageEl.style.color = "red";
-      messageEl.textContent = "Invalid username or password.";
-    }
-  }, 1500);
-}
-
-// ===== Logout handler =====
-function handleLogout(event) {
-  window.location.href = "index.html";
-}
-
-// ===== Send Money handler =====
-function handleSendMoney(e) {
-  e.preventDefault();
-
-  const bank = document.getElementById("bank").value;
-  const account = document.getElementById("account").value;
-  const recipient = document.getElementById("recipient").value;
-  const amount = document.getElementById("amount").value;
-  const note = document.getElementById("note").value;
-
-  if (!bank || !account || !recipient || !amount) {
-    alert("Please fill all required fields!");
-    return;
-  }
-
-  alert(`Successfully sent $${amount} to ${recipient} (${bank})`);
-  e.target.reset();
-}
-
-document.addEventListener("DOMContentLoaded", () => {
-  // ----- Toggle Transfer Form -----
-  const toggleBtn = document.getElementById("toggle-transfer-btn");
-  const sendForm = document.getElementById("send-money-form");
-
-  toggleBtn.addEventListener("click", () => {
-    sendForm.style.display = sendForm.style.display === "none" ? "block" : "none";
-  });
 
   // ----- Balance Element -----
   const balanceEl = document.querySelector(".balance");
@@ -99,70 +23,115 @@ document.addEventListener("DOMContentLoaded", () => {
   const transactionsList = document.querySelector(".transactions-card ul");
 
   // ----- Send Money Form -----
-  const form = document.getElementById("send-money-form");
-  const amountInput = document.getElementById("amount");
-  const recipientInput = document.getElementById("recipient");
-  const bankSelect = document.getElementById("bank");
-  const sendBtn = document.getElementById("send-btn");
+  if (sendForm) {
+    const amountInput = document.getElementById("amount");
+    const recipientInput = document.getElementById("recipient");
+    const bankSelect = document.getElementById("bank");
+    const sendBtn = document.getElementById("send-btn");
 
-  form.addEventListener("submit", (e) => {
-    e.preventDefault();
+    sendForm.addEventListener("submit", (e) => {
+      e.preventDefault();
 
-    const amount = parseFloat(amountInput.value);
-    const recipient = recipientInput.value;
-    const bank = bankSelect.value;
+      const amount = parseFloat(amountInput.value);
+      const recipient = recipientInput.value;
+      const bank = bankSelect.value;
 
-    // Validation
-    if (!bank) {
-      alert("Please select a bank.");
-      return;
-    }
+      // Validation
+      if (!bank) {
+        alert("Please select a bank.");
+        return;
+      }
+      if (!recipient) {
+        alert("Enter recipient name.");
+        return;
+      }
+      if (isNaN(amount) || amount <= 0) {
+        alert("Enter a valid amount.");
+        return;
+      }
+      if (amount > totalBalance) {
+        alert("Insufficient funds.");
+        return;
+      }
 
-    if (!recipient) {
-      alert("Enter recipient name.");
-      return;
-    }
+      // Disable button and show processing animation
+      sendBtn.disabled = true;
+      let dots = 0;
+      const originalText = sendBtn.textContent;
+      sendBtn.textContent = "Processing";
 
-    if (isNaN(amount) || amount <= 0) {
-      alert("Enter a valid amount.");
-      return;
-    }
+      const loader = setInterval(() => {
+        dots = (dots + 1) % 4;
+        sendBtn.textContent = "Processing" + ".".repeat(dots);
+      }, 400);
 
-    if (amount > totalBalance) {
-      alert("Insufficient funds.");
-      return;
-    }
+      // Simulate 2-second processing
+      setTimeout(() => {
+        clearInterval(loader);
 
-    // Disable form and show processing animation
-    sendBtn.disabled = true;
-    let dots = 0;
-    const originalText = sendBtn.textContent;
-    sendBtn.textContent = "Processing";
+        // Deduct balance
+        totalBalance -= amount;
+        balanceEl.textContent =
+          "$" +
+          totalBalance.toLocaleString(undefined, {
+            minimumFractionDigits: 2,
+            maximumFractionDigits: 2,
+          });
 
-    const loader = setInterval(() => {
-      dots = (dots + 1) % 4;
-      sendBtn.textContent = "Processing" + ".".repeat(dots);
-    }, 400);
+        // Add to Recent Transactions
+        const li = document.createElement("li");
+        li.classList.add("expense");
+        li.innerHTML = `<span>Transfer to ${recipient} (${bank})</span><span>-$${amount.toLocaleString()}</span>`;
+        transactionsList.insertBefore(li, transactionsList.firstChild);
 
-    // Simulate 2-second bank processing
-    setTimeout(() => {
-      clearInterval(loader);
+        // Success alert
+        alert(`Transfer of $${amount.toLocaleString()} to ${recipient} successful ✔`);
 
-      // Deduct balance
-      totalBalance -= amount;
-      balanceEl.textContent = "$" + totalBalance.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+        // Reset form
+        sendForm.reset();
+        sendBtn.disabled = false;
+        sendBtn.textContent = originalText;
+      }, 2000);
+    });
+  }
 
-      // Add to Recent Transactions
-      const li = document.createElement("li");
-      li.classList.add("expense"); // style like expense
-      li.innerHTML = `<span>Transfer to ${recipient} (${bank})</span><span>-$${amount.toLocaleString()}</span>`;
-      transactionsList.insertBefore(li, transactionsList.firstChild); // newest on top
+  // ----- Logout handler -----
+  const logoutBtn = document.getElementById("logout-btn");
+  if (logoutBtn) {
+    logoutBtn.addEventListener("click", () => {
+      window.location.href = "index.html";
+    });
+  }
 
-      // Show success and reset form
-      alert(`Transfer of $${amount.toLocaleString()} to ${recipient} successful ✔`);
-      form.reset();
-      sendBtn.disabled = false;
-      sendBtn.textContent = originalText;
-    }, 2000);
-  });
+  // ----- Optional: Login handler (if on login page) -----
+  const loginForm = document.getElementById("login-form");
+  if (loginForm) {
+    loginForm.addEventListener("submit", (event) => {
+      event.preventDefault();
+      const username = document.getElementById("username")?.value?.trim() || "";
+      const password = document.getElementById("password")?.value || "";
+      const messageEl = document.getElementById("login-message");
+
+      if (!username || !password) {
+        alert("Please enter both username and password.");
+        return;
+      }
+
+      messageEl.style.color = "blue";
+      messageEl.textContent = "Checking credentials...";
+
+      setTimeout(() => {
+        if (username === "John Williams" && password === "Password123") {
+          messageEl.style.color = "green";
+          messageEl.textContent = "Login successful! Redirecting...";
+          setTimeout(() => {
+            window.location.href = "dashboard.html";
+          }, 1000);
+        } else {
+          messageEl.style.color = "red";
+          messageEl.textContent = "Invalid username or password.";
+        }
+      }, 1500);
+    });
+  }
 });

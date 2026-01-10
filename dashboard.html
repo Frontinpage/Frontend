@@ -11,7 +11,8 @@
   <!-- Navbar -->
   <nav class="navbar">
     <div class="profile">
-      <span>Welcome, User</span>
+      <img src="https://i.pravatar.cc/40" alt="Avatar" class="avatar">
+      <span>Welcome, John</span>
     </div>
     <button onclick="logout()">Logout</button>
   </nav>
@@ -21,17 +22,27 @@
 
     <!-- Account Balance -->
     <div class="card balance-card">
-      <h3>Account Balance</h3>
+      <h3>Total Balance</h3>
       <p class="balance">$12,450.00</p>
+      <div class="mini-cards">
+        <div class="mini-card">
+          <h4>Checking</h4>
+          <p>$7,200.00</p>
+        </div>
+        <div class="mini-card">
+          <h4>Savings</h4>
+          <p>$5,250.00</p>
+        </div>
+      </div>
     </div>
 
     <!-- Recent Transactions -->
     <div class="card transactions-card">
       <h3>Recent Transactions</h3>
       <ul>
-        <li><span>Amazon</span><span>-$120</span></li>
-        <li><span>Salary Deposit</span><span>+$2,500</span></li>
-        <li><span>Transfer to John Doe</span><span>-$300</span></li>
+        <li class="expense"><span>Amazon</span><span>-$120</span></li>
+        <li class="income"><span>Salary Deposit</span><span>+$2,500</span></li>
+        <li class="expense"><span>Transfer to John Doe</span><span>-$300</span></li>
       </ul>
     </div>
 
@@ -41,6 +52,14 @@
       <input type="text" placeholder="Recipient Name" id="recipient">
       <input type="number" placeholder="Amount" id="amount">
       <button onclick="sendMoney()">Send</button>
+    </div>
+
+    <!-- Spending Chart Placeholder -->
+    <div class="card chart-card">
+      <h3>Spending Trends</h3>
+      <div class="chart-placeholder">
+        <p>Chart goes here (demo)</p>
+      </div>
     </div>
 
   </main>

@@ -212,4 +212,24 @@ toggleBtn.addEventListener("click", () => {
 
   toggleBtn.textContent = visible ? "👁‍🗨" : "👁";
   visible = !visible;
-});                          
+});
+
+// Profile Panel Toggle
+const profileBtn = document.getElementById("profile-btn");
+const profilePanel = document.getElementById("profile-panel");
+const closeProfileBtn = document.getElementById("close-profile");
+
+profileBtn.addEventListener("click", () => {
+  profilePanel.style.display = profilePanel.style.display === "block" ? "none" : "block";
+});
+
+closeProfileBtn.addEventListener("click", () => {
+  profilePanel.style.display = "none";
+});
+
+// Optional: close panel if clicked outside
+window.addEventListener("click", (e) => {
+  if (profilePanel.style.display === "block" && !profilePanel.contains(e.target) && !profileBtn.contains(e.target)) {
+    profilePanel.style.display = "none";
+  }
+});

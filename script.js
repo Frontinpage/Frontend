@@ -70,8 +70,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
     visible = !visible;
   });
-}
-
+    
 // Step 1: Check localStorage first
 let totalBalance = parseFloat(localStorage.getItem("totalBalance"));
 

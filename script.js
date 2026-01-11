@@ -58,7 +58,7 @@ document.addEventListener("DOMContentLoaded", () => {
       transactionsList.insertBefore(li, transactionsList.firstChild);
     });
   }
-     // ===== MONTHLY SPENDING CHART =====
+    // ===== MONTHLY SPENDING CHART =====
   const spendingCanvas = document.getElementById("spendingChart");
   if (spendingCanvas) {
   const ctx = spendingCanvas.getContext("2d");
@@ -67,7 +67,8 @@ document.addEventListener("DOMContentLoaded", () => {
   let monthlyExpenses = Array(12).fill(0);
   let monthlyIncome = Array(12).fill(0);
 
-  savedTransactions.forEach(tx => {
+    // use existing savedTransactions, do NOT redeclare
+    savedTransactions.forEach(tx => {
     const today = new Date();
     const txDate = tx.date ? new Date(tx.date) : today;
     const monthIndex = txDate.getMonth();

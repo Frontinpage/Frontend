@@ -450,3 +450,34 @@ canvas#spendingChart { width: 100% !important; height: 200px !important; }
   width: 100% !important;
   height: 100% !important;
 }
+
+.quick-actions-card {
+  width: 300px;
+  padding: 20px;
+  border-radius: var(--radius-md);
+  box-shadow: var(--shadow-lg);
+  background: var(--color-surface);
+  text-align: center;
+}
+
+.quick-actions-buttons {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  margin-top: 10px;
+}
+
+.quick-btn {
+  padding: 12px;
+  border-radius: var(--radius-sm);
+  border: none;
+  background-color: var(--color-primary);
+  color: #fff;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background 0.2s;
+}
+
+.quick-btn:hover {
+  background-color: var(--color-primary-strong);
+}

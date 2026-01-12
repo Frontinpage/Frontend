@@ -24,7 +24,7 @@ document.addEventListener("DOMContentLoaded", () => {
       messageEl.textContent = "Checking credentials...";
 
       setTimeout(() => {
-        if (username === "John Williams" && password === "Password123") {
+        if (username === "John Williams" && password === "1346799") {
           if (messageEl) {
             messageEl.style.color = "green";
             messageEl.textContent = "Login successful! Redirecting...";

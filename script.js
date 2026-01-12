@@ -214,7 +214,7 @@ document.addEventListener("DOMContentLoaded", () => {
       };
     });
   }
-    // ===== Quick buttons & cards =====
+      // ===== Quick buttons & cards =====
 const quickBtns = document.querySelectorAll('.quick-btn');
 const payBillCard = document.querySelector('.pay-bill-card');
 const requestMoneyCard = document.querySelector('.request-money-card');
@@ -227,16 +227,29 @@ quickBtns.forEach(btn => {
   btn.addEventListener('click', () => {
     const action = btn.dataset.action;
 
+    // Pay Bill button
     if (action === 'pay-bill') {
       payBillCard.style.display = payBillCard.style.display === 'block' ? 'none' : 'block';
       requestMoneyCard.style.display = 'none';
+
+      // Scroll smoothly if now visible
+      if (payBillCard.style.display === 'block') {
+        payBillCard.scrollIntoView({ behavior: 'smooth', block: 'center' });
+      }
     }
 
+    // Request Money button
     if (action === 'request-money') {
       requestMoneyCard.style.display = requestMoneyCard.style.display === 'block' ? 'none' : 'block';
       payBillCard.style.display = 'none';
+
+      // Scroll smoothly if now visible
+      if (requestMoneyCard.style.display === 'block') {
+        requestMoneyCard.scrollIntoView({ behavior: 'smooth', block: 'center' });
+      }
     }
 
+    // Send Money button
     if (action === 'send-money') {
       sendForm.style.display = 'block';
       toggleTransferBtn.textContent = "Hide Transfer Form";

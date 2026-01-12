@@ -64,6 +64,58 @@
     <button class="quick-btn" data-action="request-money">📥 Request Money</button>
   </div>
     </div>
+    
+    <!-- Pay Bill Form -->
+<div class="card pay-bill-card" style="display:none; margin-top:15px;">
+  <h3>Pay Bill</h3>
+  <form id="pay-bill-form">
+    <div class="form-group">
+      <label for="biller">Select Biller</label>
+      <select id="biller" required>
+        <option value="" disabled selected>Choose Biller</option>
+        <option value="Electricity">Electricity</option>
+        <option value="Water">Water</option>
+        <option value="Internet">Internet</option>
+        <option value="Cable TV">Cable TV</option>
+      </select>
+    </div>
+
+    <div class="form-group">
+      <label for="bill-amount">Amount ($)</label>
+      <input type="number" id="bill-amount" placeholder="Enter amount" required>
+    </div>
+
+    <div class="form-group">
+      <label for="bill-note">Note (Optional)</label>
+      <input type="text" id="bill-note" placeholder="Add a note">
+    </div>
+
+    <button type="submit">Pay Bill</button>
+  </form>
+</div>
+
+<!-- Request Money Form -->
+<div class="card request-money-card" style="display:none; margin-top:15px;">
+  <h3>Request Money</h3>
+  <form id="request-money-form">
+    <div class="form-group">
+      <label for="request-recipient">Recipient Name</label>
+      <input type="text" id="request-recipient" placeholder="Enter recipient name" required>
+    </div>
+
+    <div class="form-group">
+      <label for="request-amount">Amount ($)</label>
+      <input type="number" id="request-amount" placeholder="Enter amount" required>
+    </div>
+
+    <div class="form-group">
+      <label for="request-note">Note (Optional)</label>
+      <input type="text" id="request-note" placeholder="Add a note">
+    </div>
+
+    <button type="submit">Request Money</button>
+  </form>
+  </div>
 
     <!-- Recent Transactions -->
  <div class="card transactions-card">

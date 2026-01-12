@@ -28,7 +28,6 @@ document.addEventListener("DOMContentLoaded", () => {
           if (messageEl) {
             messageEl.style.color = "green";
             messageEl.textContent = "Login successful! Redirecting...";
-            
             localStorage.setItem("loggedIn", "true");
           }
           setTimeout(() => window.location.href = "dashboard.html", 1000);

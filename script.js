@@ -227,8 +227,11 @@ document.addEventListener("DOMContentLoaded", () => {
 
   // ===== LOGOUT =====
   const logoutBtn = document.getElementById("logout-btn");
-  if (logoutBtn) logoutBtn.addEventListener("click", () => window.location.href = "index.html");
-
+if (logoutBtn) logoutBtn.addEventListener("click", () => {
+  localStorage.removeItem("loggedIn"); // clear login flag
+  window.location.href = "index.html";  // go back to login page
+});
+   
   // ===== BALANCE TOGGLE =====
   const balanceToggleBtn = document.getElementById("toggle-balance");
   const sensitiveBalances = document.querySelectorAll(".sensitive");

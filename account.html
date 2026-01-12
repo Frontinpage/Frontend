@@ -1,0 +1,193 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Account Settings | Front Page</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="stylesheet" href="style.css">
+  <style>
+    .info-page { max-width: 550px; margin: 30px auto; padding: 20px; background: #fff; border-radius: 10px; box-shadow: 0 8px 20px rgba(0,0,0,0.1); }
+    h1 { margin-bottom: 15px; }
+    .form-group { margin-bottom: 15px; }
+    input[type="text"], input[type="number"], select { width: 100%; padding: 10px; border-radius: 6px; border: 1px solid #ccc; }
+    button { padding: 10px 20px; border: none; border-radius: 6px; background: #007bff; color: #fff; cursor: pointer; }
+    button:hover { background: #0056b3; }
+    .toggle-switch { display: flex; align-items: center; gap: 10px; margin-bottom: 10px; }
+    .toggle-switch input { transform: scale(1.2); }
+    .message { margin-top: 10px; font-weight: 500; }
+    .success { color: green; }
+    .error { color: red; }
+    .masked { letter-spacing: 3px; }
+  </style>
+</head>
+<body>
+
+<script>
+  // Block access if not logged in
+  if (!localStorage.getItem("loggedIn")) {
+    window.location.href = "index.html";
+  }
+</script>
+
+<nav class="navbar">
+  <div class="profile">
+    <span>Front Page</span>
+  </div>
+  <a href="dashboard.html" class="logout-btn">Back to Dashboard</a>
+</nav>
+
+<main class="info-page">
+  <h1>Account Settings</h1>
+
+  <!-- Account Details -->
+  <section>
+    <h2>Account Details</h2>
+    <p>Account Number: <span id="accountNumber" class="masked">**** **** 1234</span> 
+      <button id="toggleAccountNumber" style="padding:5px 10px;font-size:12px;">Show</button>
+    </p>
+    <p>Account Type: <strong>Checking</strong></p>
+    <p>Balance: <span id="accountBalance" class="masked">$••••••</span></p>
+  </section>
+
+  <!-- Daily Transfer Limits -->
+  <section style="margin-top: 30px;">
+    <h2>Daily Transfer Limits</h2>
+    <form id="limits-form">
+      <div class="form-group">
+        <label for="dailyLimit">Set Daily Limit ($)</label>
+        <input type="number" id="dailyLimit" min="0" step="100" required>
+      </div>
+      <button type="submit">Update Limit</button>
+      <p id="limit-message" class="message"></p>
+    </form>
+  </section>
+
+  <!-- Linked Accounts -->
+  <section style="margin-top: 30px;">
+    <h2>Linked Accounts</h2>
+    <ul id="linkedAccounts">
+      <li>Bank of Nigeria — **** **** 5678 <button class="remove-btn">Remove</button></li>
+      <li>Global Bank — **** **** 9012 <button class="remove-btn">Remove</button></li>
+    </ul>
+    <button id="addAccountBtn" style="margin-top:10px;">Add Linked Account</button>
+    <p id="linked-message" class="message"></p>
+  </section>
+
+  <!-- Transaction Alerts -->
+  <section style="margin-top: 30px;">
+    <h2>Transaction Alerts</h2>
+    <div class="toggle-switch">
+      <input type="checkbox" id="txnEmailNotif">
+      <label for="txnEmailNotif">Email Alerts for Transactions Above $1000</label>
+    </div>
+    <div class="toggle-switch">
+      <input type="checkbox" id="txnSMSNotif">
+      <label for="txnSMSNotif">SMS Alerts for Transactions Above $1000</label>
+    </div>
+    <button id="saveAlertsBtn">Save Alerts</button>
+    <p id="alerts-message" class="message"></p>
+  </section>
+
+  <section style="margin-top: 30px;">
+    <button id="logoutBtn" style="background:#dc3545;">Logout</button>
+  </section>
+</main>
+
+<footer class="login-footer">
+  <small>Demo project only. No real services provided.</small>
+</footer>
+
+<script>
+  // ===== Demo Account Data =====
+  const demoAccount = {
+    accountNumber: "123456789012",
+    balance: 5200.50,
+    dailyLimit: 2000,
+    linkedAccounts: [
+      { bank: "Bank of Nigeria", number: "5678" },
+      { bank: "Global Bank", number: "9012" }
+    ],
+    txnEmailAlerts: true,
+    txnSMSAlerts: false
+  };
+
+  // ===== Populate Account Details =====
+  const accountNumberEl = document.getElementById("accountNumber");
+  const accountBalanceEl = document.getElementById("accountBalance");
+  const toggleAccountBtn = document.getElementById("toggleAccountNumber");
+
+  let showAccount = false;
+  toggleAccountBtn.addEventListener("click", () => {
+    showAccount = !showAccount;
+    accountNumberEl.textContent = showAccount 
+      ? demoAccount.accountNumber.replace(/(\d{4})(?=\d)/g, "$1 ") 
+      : "**** **** 1234";
+    accountBalanceEl.textContent = showAccount 
+      ? "$" + demoAccount.balance.toLocaleString(undefined, {minimumFractionDigits:2, maximumFractionDigits:2})
+      : "$••••••";
+    toggleAccountBtn.textContent = showAccount ? "Hide" : "Show";
+  });
+
+  // ===== Daily Limit Form =====
+  document.getElementById("limits-form").addEventListener("submit", e => {
+    e.preventDefault();
+    const newLimit = parseFloat(document.getElementById("dailyLimit").value);
+    if (isNaN(newLimit) || newLimit <= 0) {
+      const msg = document.getElementById("limit-message");
+      msg.textContent = "Invalid limit!";
+      msg.className = "message error";
+      return;
+    }
+    demoAccount.dailyLimit = newLimit;
+    const msg = document.getElementById("limit-message");
+    msg.textContent = `Daily limit updated to $${newLimit.toLocaleString()} ✔`;
+    msg.className = "message success";
+  });
+
+  // ===== Linked Accounts =====
+  const linkedList = document.getElementById("linkedAccounts");
+  const linkedMsg = document.getElementById("linked-message");
+
+  linkedList.addEventListener("click", e => {
+    if (e.target.classList.contains("remove-btn")) {
+      const li = e.target.parentElement;
+      li.remove();
+      linkedMsg.textContent = "Linked account removed ✔";
+      linkedMsg.className = "message success";
+    }
+  });
+
+  document.getElementById("addAccountBtn").addEventListener("click", () => {
+    const bank = prompt("Enter bank name:");
+    const number = prompt("Enter last 4 digits of account:");
+    if (bank && number) {
+      const li = document.createElement("li");
+      li.innerHTML = `${bank} — **** **** ${number} <button class="remove-btn">Remove</button>`;
+      linkedList.appendChild(li);
+      linkedMsg.textContent = "Linked account added ✔";
+      linkedMsg.className = "message success";
+    }
+  });
+
+  // ===== Transaction Alerts =====
+  document.getElementById("saveAlertsBtn").addEventListener("click", () => {
+    demoAccount.txnEmailAlerts = document.getElementById("txnEmailNotif").checked;
+    demoAccount.txnSMSAlerts = document.getElementById("txnSMSNotif").checked;
+    const msg = document.getElementById("alerts-message");
+    msg.textContent = "Transaction alert preferences saved ✔";
+    msg.className = "message success";
+  });
+
+  // ===== Populate Alerts =====
+  document.getElementById("txnEmailNotif").checked = demoAccount.txnEmailAlerts;
+  document.getElementById("txnSMSNotif").checked = demoAccount.txnSMSAlerts;
+
+  // ===== Logout =====
+  document.getElementById("logoutBtn").addEventListener("click", () => {
+    localStorage.removeItem("loggedIn");
+    window.location.href = "index.html";
+  });
+</script>
+
+</body>
+</html>

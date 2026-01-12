@@ -240,8 +240,8 @@ document.addEventListener("DOMContentLoaded", () => {
 const demoUser = {
   fullName: "John Williams",
   email: "jsonwilliams084@gmail.com",
-  phone: "+1 903 1408 205",
-  password: "1346799",
+  phone: "+1 903 1408 203",
+  password: "1346852",
   emailNotif: true,
   smsNotif: false
 };

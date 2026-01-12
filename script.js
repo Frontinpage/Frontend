@@ -364,20 +364,6 @@ if (passwordForm) {
   });
 }
 
-  // ===== QUICK BUTTONS =====
-  document.querySelectorAll(".quick-btn").forEach(btn => {
-    btn.addEventListener("click", (e) => {
-      const action = e.currentTarget.dataset.action;
-      if(action === "pay-bill") alert("Redirecting to Pay Bill form...");
-      else if(action === "send-money") {
-        sendForm.style.display = "block";
-        toggleTransferBtn.textContent = "Hide Transfer Form";
-        sendForm.scrollIntoView({behavior: "smooth"});
-      } 
-      else if(action === "request-money") alert("Redirecting to Request Money form...");
-    });
-  });
-
   // ===== PROFILE PANEL =====
   const profileBtn = document.getElementById("profile-btn");
   const profilePanel = document.getElementById("profile-panel");

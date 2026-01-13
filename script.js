@@ -386,25 +386,12 @@ if (requestMoneyForm && transactionsList) {
     visible = !visible;
   });
 
-   // ===== DEMO USER =====
-  const demoUser = {
-  fullName: "Charles Williams",
-  email: "Charlesweahh@gmail.com",
-  phone: "+1 510 367 1796",
-  password: "1346000",
-  emailNotif: true,
-  smsNotif: false
-};
-  // Save demo user to localStorage if not already saved
-if (!localStorage.getItem("demoUser")) {
-  localStorage.setItem("demoUser", JSON.stringify(demoUser));
-}
     
-// ===== CHANGE PASSWORD =====
-const passwordForm = document.getElementById("password-form");
-if (passwordForm) {
-  const passwordMessage = document.getElementById("password-message");
-  passwordForm.addEventListener("submit", e => {
+    // ===== CHANGE PASSWORD =====
+    const passwordForm = document.getElementById("password-form");
+    if (passwordForm) {
+    const passwordMessage = document.getElementById("password-message");
+    passwordForm.addEventListener("submit", e => {
     e.preventDefault(); // stops the page from refreshing
     const current = document.getElementById("currentPassword").value;
     const newP = document.getElementById("newPassword").value;

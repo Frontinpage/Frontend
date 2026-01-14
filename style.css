@@ -581,3 +581,22 @@ canvas#spendingChart { width: 100% !important; height: 200px !important; }
 #logoutBtn:hover {
   opacity: 0.85;
 }
+
+.success-modal {
+  position: fixed;
+  inset: 0;
+  background: rgba(0,0,0,0.5);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 999;
+}
+
+.success-box {
+  background: #fff;
+  padding: 20px;
+  border-radius: 10px;
+  width: 90%;
+  max-width: 400px;
+  text-align: center;
+}

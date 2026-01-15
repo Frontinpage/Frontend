@@ -421,6 +421,22 @@ if (payBillForm && balanceEl && transactionsList) {
     };
   });
 }
+  // ===== SUCCESS MODAL CLOSE =====
+const successModal = document.getElementById("success-modal");
+const closeReceiptBtn = document.getElementById("close-receipt");
+
+if (closeReceiptBtn) {
+  closeReceiptBtn.addEventListener("click", () => {
+    if (successModal) successModal.style.display = "none";
+  });
+}
+
+// Optional: close modal if clicking outside
+document.addEventListener("click", e => {
+  if (successModal && successModal.style.display === "flex" && !successModal.contains(e.target)) {
+    successModal.style.display = "none";
+  }
+});
   
   // ===== REQUEST MONEY =====
   const requestMoneyForm = document.getElementById("request-money-form");

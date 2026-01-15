@@ -67,11 +67,9 @@ document.addEventListener("DOMContentLoaded", () => {
     window.location.href = "dashboard.html";
   }
 
-
-  // ===== DASHBOARD PAGE ONLY =====
-  if (window.location.pathname.endsWith("dashboard.html")) {
   
   // ===== DASHBOARD ELEMENTS =====
+  if (window.location.pathname.endsWith("dashboard.html")) {
   const sendForm = document.getElementById("send-money-form");
   const toggleTransferBtn = document.getElementById("toggle-transfer-btn");
   const transactionsList = document.querySelector(".transactions-card ul");

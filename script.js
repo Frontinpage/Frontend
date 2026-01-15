@@ -357,15 +357,17 @@
       });
     }
 
-     // ===== PIN CONFIRM =====
-    if (confirmPinBtn) {
-    confirmPinBtn.addEventListener("click", () => {
+  // ===== PIN CONFIRM =====
+  if (confirmPinBtn) {
+  confirmPinBtn.addEventListener("click", () => {
     if (!transactionPinInput) return;
 
     // ===== PIN VALIDATION =====
     if (transactionPinInput.value !== demoUser.transferPin) {
       attemptsLeft--;
-      if (pinMessage) pinMessage.textContent = attemptsLeft > 0 ? `Incorrect PIN. ${attemptsLeft} attempt(s) remaining.` : "Maximum attempts reached!";
+      if (pinMessage) pinMessage.textContent = attemptsLeft > 0
+        ? `Incorrect PIN. ${attemptsLeft} attempt(s) remaining.`
+        : "Maximum attempts reached!";
       transactionPinInput.value = "";
       if (attemptsLeft <= 0) {
         confirmPinBtn.disabled = true;
@@ -385,7 +387,7 @@
 
     const { action, details } = pendingTransaction;
 
-    // Determine which button triggers processing
+    // Determine which button triggers processing animation
     let targetBtn = null;
     if (action === "send") targetBtn = sendBtn;
     else if (action === "pay") targetBtn = payBillForm ? payBillForm.querySelector("button[type='submit']") : null;
@@ -421,7 +423,7 @@
           if (payBillForm) payBillForm.reset();
         } else if (action === "request") {
           const { recipient, amount } = details;
-          // Add pending transaction
+          // Only Request Money becomes pending
           const txObj = {
             type: "income",
             text: `Money Requested from ${recipient}`,
@@ -438,7 +440,7 @@
         // ===== SHOW SUCCESS MODAL =====
         const successModal = $("success-modal");
         if (successModal) {
-          successModal.style.display = "flex";  // Centered and visible
+          successModal.style.display = "flex"; // always visible
           successModal.style.position = "fixed";
           successModal.style.top = "50%";
           successModal.style.left = "50%";
@@ -447,10 +449,9 @@
 
           const rid = $("r-id"); if (rid) rid.textContent = Math.floor(Math.random() * 1000000);
           const rname = $("r-name");
-          if (rname) rname.textContent = action === "request" ? `Pending: ${details.recipient}` : 
+          if (rname) rname.textContent = action === "request" ? `Pending: ${details.recipient}` :
             (action === "send" ? details.recipient : details.billText);
-          const ramount = $("r-amount");
-          if (ramount) ramount.textContent = Number(action === "request" ? details.amount : (details.amount || details.billAmount)).toFixed(2);
+          const ramount = $("r-amount"); if (ramount) ramount.textContent = Number(action === "request" ? details.amount : (details.amount || details.billAmount)).toFixed(2);
           const rdate = $("r-date"); if (rdate) rdate.textContent = new Date().toLocaleDateString();
 
           const modalHeading = successModal.querySelector("h2");
@@ -464,7 +465,7 @@
       }, 4000); // 4 seconds processing
     }
   });
-}
+}  
 
 // ===== PIN CANCEL =====
 if (cancelPinBtn) {

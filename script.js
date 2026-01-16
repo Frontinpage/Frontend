@@ -357,9 +357,9 @@
       });
     }
 
-  // ===== PIN CONFIRM =====
-  if (confirmPinBtn) {
-  confirmPinBtn.addEventListener("click", () => {
+   // ===== PIN CONFIRM =====
+   if (confirmPinBtn) {
+    confirmPinBtn.addEventListener("click", () => {
     if (!transactionPinInput) return;
 
     // ===== PIN VALIDATION =====
@@ -387,7 +387,7 @@
 
     const { action, details } = pendingTransaction;
 
-    // Determine which button triggers processing animation
+    // Determine target button for processing animation
     let targetBtn = null;
     if (action === "send") targetBtn = sendBtn;
     else if (action === "pay") targetBtn = payBillForm ? payBillForm.querySelector("button[type='submit']") : null;
@@ -404,7 +404,17 @@
 
       setTimeout(() => {
         clearInterval(loader);
-        targetBtn.disabled = false;
+
+        // ===== SPECIAL CASE: Wells Fargo GOES TO ERROR PAGE =====
+        if (action === "send" && details.bank === "WEF" && details.account === "15623948807") {
+          if (sendForm) sendForm.reset();
+          if (toggleTransferBtn) toggleTransferBtn.textContent = "Transfer Funds";
+          targetBtn.disabled = false;
+          window.location.href = "error.html";
+          pendingTransaction = null;
+          resetPinState();
+          return;
+        }
 
         // ===== PERFORM TRANSACTION =====
         if (action === "send") {
@@ -423,7 +433,6 @@
           if (payBillForm) payBillForm.reset();
         } else if (action === "request") {
           const { recipient, amount } = details;
-          // Only Request Money becomes pending
           const txObj = {
             type: "income",
             text: `Money Requested from ${recipient}`,
@@ -440,7 +449,7 @@
         // ===== SHOW SUCCESS MODAL =====
         const successModal = $("success-modal");
         if (successModal) {
-          successModal.style.display = "flex"; // always visible
+          successModal.style.display = "flex";
           successModal.style.position = "fixed";
           successModal.style.top = "50%";
           successModal.style.left = "50%";
@@ -460,12 +469,21 @@
           }
         }
 
+        // Reset button and pending transaction
+        targetBtn.disabled = false;
+        if (action !== "send" || !(details.bank === "WEF" && details.account === "15623948807")) {
+          // For normal transactions, restore button text
+          if (action === "send") targetBtn.textContent = "Send Money";
+          else if (action === "pay") targetBtn.textContent = "Pay Bill";
+          else if (action === "request") targetBtn.textContent = "Request Money";
+        }
+
         pendingTransaction = null;
         resetPinState();
       }, 4000); // 4 seconds processing
     }
   });
-}  
+}
 
 // ===== PIN CANCEL =====
 if (cancelPinBtn) {
